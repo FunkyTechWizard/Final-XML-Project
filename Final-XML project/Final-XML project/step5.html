@@ -1,0 +1,98 @@
+<!-- •	Add the following declaration at the top of .html files  
+/********************************************************************************* 
+*	ITC5202 – Project 
+*	I declare that this assignment is my own work in accordance with Humber Academic Policy.   *  No part of this assignment has been copied manually or electronically from any other source *  (including web sites) or distributed to other students. 
+*  
+*	Group member Name: Utsav Patel,Charandeep Singh Student IDs: N01516259, N01515226 Date: 08-08-2022 
+* 
+* 
+********************************************************************************/   -->
+<!DOCTYPE html>
+<html>
+<head>
+        <style>
+        th{
+                color: rgb(30, 6, 47);
+                background-color: grey ;
+            }
+            td{
+                color: black;
+                background-color: gold;
+            }
+            table, th, td {
+          border: 1px solid white;
+          border-collapse: collapse;
+        }
+        body{
+            background-color: skyblue;
+        }
+        a{
+         
+          color:orangered;
+        }
+        #ser{
+        background-color: #4CAF50; 
+        border: none;
+        color: black;
+        padding: 4px 12px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+        background-color: #e7e7e7;
+      } 
+      label{
+        font-size: 25px;
+        cursor: crosshair;
+        color: darkred;
+      }
+        
+        </style>
+</head>
+  <body onload="Step5()">
+    <p id="demo"></p>
+
+    <script>
+      function Step5() {
+        //Creating an object
+        var xhttp = new XMLHttpRequest();
+        //Opening the file
+        xhttp.open("GET", "dataset_r.xml", false);
+        //Sending the request
+        xhttp.send();
+        // Reading data
+        xmlDoc = xhttp.responseXML;
+        // var feed= xmlDoc.getElementsByTagName("feed");
+        // var category = xmlDoc.getElementsByTagName("category");
+        // var author = xmlDoc.getElementsByTagName("author");
+        var entries = xmlDoc.getElementsByTagName("entry");
+        var author = xmlDoc.getElementsByTagName("author");
+
+        let output ="<h2 style='color: red'>" + xmlDoc.getElementsByTagName("title")[0].innerHTML + "</h2>";
+        output +="<h3 style='color: red'>" +xmlDoc.getElementsByTagName("subtitle")[0].innerHTML +"</h3>";
+        output +="<p style='color: red'>Last Updated: " +new Date(xmlDoc.getElementsByTagName("updated")[0].innerHTML) +"</p><br><br>";
+       
+       
+        output +="<table border ='1'><th>Author Name</th><th>URI</th><th>Category</th><th>Category Label</th><th>content</th><th>id</th><th>link</th><th>updated</th><th>published</th><th>title</th>";
+        for (let i = 0; i < entries.length; i++) {
+          output +="<tr>";
+          output +="<td>" +entries[i].getElementsByTagName("author")[0].children[0].innerHTML + "</td>";
+          output +="<td>" + entries[i].getElementsByTagName("author")[0].children[1].innerHTML + "</td>";
+          output +="<td>" +entries[i] .getElementsByTagName("category")[0].getAttribute("term") +"</td>";
+          output +="<td>" +entries[i].getElementsByTagName("category")[0].getAttribute("label") + "</td>";
+          output +="<td>" + entries[i].getElementsByTagName("content")[0].textContent;+"</td>";
+          output +="<td>" +entries[i].getElementsByTagName("id")[0].innerHTML +"</td>";
+          output +="<td>" +entries[i].getElementsByTagName("link")[0].getAttribute("href") +"</td>";
+          output +="<td>" +entries[i].getElementsByTagName("updated")[0].innerHTML +"</td>";
+          output +="<td>" +entries[i].getElementsByTagName("published")[0].innerHTML +"</td>";
+          output +="<td>" +entries[i].getElementsByTagName("title")[0].innerHTML +"</td>";
+        }
+
+        output += "</table>";
+        document.getElementById("demo").innerHTML = output;
+      }
+    </script>
+  </body>
+</html>

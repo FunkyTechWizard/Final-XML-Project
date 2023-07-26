@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Step1</title>
+    <style></style>
+    <!-- step 1: jQuery CDN to the project-->
+    <script
+      src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <style>
+      th{
+          color: rgb(30, 6, 47);
+          background-color: grey ;
+      }
+      td{
+          color: black;
+          background-color: gold;
+      }
+      table, th, td {
+    border: 1px solid white;
+    border-collapse: collapse;
+  }
+  body{
+      background-color: skyblue;
+  }
+  a{
+   
+    color:yellow;
+  }
+  #ser{
+  background-color: #4CAF50; 
+  border: none;
+  color: black;
+  padding: 4px 12px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  background-color: #e7e7e7;
+} 
+label{
+  font-size: 25px;
+  cursor: crosshair;
+  color: darkred;
+}
+  
+  </style>
+  </head>
+
+  <body>
+    <h3>
+      <b><label>Search </label></b><br/>
+        <input id="query" type="text"/><br/>
+          <input type="button" id="ser" value="Find" onclick="fetchData()">
+        </h3>
+        <div id="locs"></div>
+
+        <script>
+      function fetchData() {
+            if (!$("#query").val()) {
+                alert("Enter Search Item");
+                return false;
+            }
+            else {
+                 var data = $("#query").val();
+            }
+      var limit="limit=100";
+      var Api="https://www.reddit.com/search.json?q=" + data;
+            
+        output = "<table border = 1><th> S.No. </th><th> Title </th><th> Author </th><th>Subreddit </th><th> URL </th><th> Score </th><th> Flair </th>";
+        
+        $.getJSON( Api + "&"+ limit,function (Step1) {
+          Step1.data.children.sort((a,b) => (a.data.title > b.data.title) ? 1 : ((b.data.title > a.data.title) ? -1 : 0))
+           
+            $.each(Step1.data.children, function (i, item) {
+              output += "<tr>";
+              output += "<th>" + (i + 1) + "</th>";
+              output += "<th>" + item.data.title + "</th>";
+              output += "<th>" + item.data.author + "</th>";
+              output += "<th>" + item.data.subreddit + "</th>";
+              output += "<th><a href=" + item.data.url +">"+ item.data.url + "</a></th>";
+              output += "<th>" + item.data.score + "</th>";
+              output += "<th>" + item.data.link_flair_text + "</th>";
+              output += "</tr>";
+            });
+            output += "</table>";
+            $("#locs").html(output);
+          })
+      
+        
+      }
+    
+    </script>
+      </body>
+    </html>

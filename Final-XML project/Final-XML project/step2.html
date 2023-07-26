@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Step 2</title>
+    
+    <style>
+      th{
+          color: rgb(30, 6, 47);
+          background-color: grey ;
+      }
+      td{
+          color: black;
+          background-color: gold;
+      }
+      table, th, td {
+    border: 1px solid white;
+    border-collapse: collapse;
+  }
+  body{
+      background-color: skyblue;
+  }
+  a{
+   
+    color:yellow;
+  }
+  #ser{
+  background-color: #4CAF50; /* Green */
+  border: none;
+  color: black;
+  padding: 4px 12px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  background-color: #e7e7e7;
+} 
+label{
+  font-size: 25px;
+  cursor: crosshair;
+  color: darkred;
+}
+  
+  </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  </head>
+
+  <body>
+    <h3>
+      <label>Search </label><br />
+      <input id="query" type="text" /><br />
+      <input type="button" value="Find" id="ser" onclick="fetchData()" />
+    </h3>
+    <p id="locs"></p>
+
+    <script>
+  function fetchData() {
+            if (!$("#query").val()) {
+                alert("Enter Search Item");
+                return false;
+            }
+            else {
+                 var data = $("#query").val();
+            }
+  //var data = $("#query").val();
+  //var limit="limit=100";
+      
+  output = "<table border = 1><th> S.No. </th><th> Author </th><th> Subreddit </th><th> Body </th><th> URL </th><th> Score </th><th> Flair </th>";
+        
+      $.getJSON('https://api.pushshift.io/reddit/search/comment/?q=' +data +'&limit=100' , function (Step2) {
+      Step2.data.sort((a,b) => (a.body > b.body) ? 1 : ((b.body > a.body) ? -1 : 0))
+
+      $.each(Step2.data, function (i, item) {
+              output += "<tr>";
+              output += "<th>" + (i + 1) + "</th>";
+              output += "<th>" + item.author + "</th>";
+              output += "<th>" + item.subreddit + "</th>";
+              output += "<th>" + item.body + "</th>";
+              output += "<th><a href=" + item.permalink +">"+ item.permalink + "</a></th>";
+              output += "<th>" + item.score + "</th>";
+              output += "<th>" + item.author_flair_type + "</th>";
+              output += "</tr>";
+            });
+            output += "</table>";
+            $("#locs").html(output);
+          })
+        
+        .fail(function() {
+                    output = "<p>Plz check API details<p>";
+                    $("#locs").html(output);
+        })
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,142 @@
+<!-- •	Add the following declaration at the top of .html files  
+/********************************************************************************* 
+*	ITC5202 – Project 
+*	I declare that this assignment is my own work in accordance with Humber Academic Policy.   *  No part of this assignment has been copied manually or electronically from any other source *  (including web sites) or distributed to other students. 
+*  
+*	Group member Name: Utsav Patel,Charandeep Singh Student IDs: N01516259, N01515226 Date: 08-08-2022 
+* 
+* 
+********************************************************************************/   -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Step 4</title>
+    <link rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css"
+      integrity="sha384-y3tfxAZXuh4HwSYylfB+J125MxIs6mR5FOHamPBG064zB+AFeWH94NdvaCBm8qnd"
+      crossorigin="anonymous">'
+    <script
+      src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js">
+    </script>
+    <script
+      src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js">
+    </script>
+    <title>Step 4</title>
+    <script
+      src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js">
+    </script>
+    <style>
+label{
+  font-size: 20px;
+  cursor: crosshair;
+  color: gold;
+
+}
+#query{
+  height: 25px;
+  width: 300px;
+  font-size: 15px;
+}
+#limit{
+  height: 25px;
+  width: 300px;
+  font-size: 15px;
+}
+body{
+  background-color: black;
+}
+#ser{
+  background-color: #4CAF50;
+  border: none;
+  color: black;
+  padding: 4px 12px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  background-color: #e7e7e7;
+} 
+#u{
+
+  background-color: #4CAF50; 
+  border: none;
+  color: black;
+  
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  background-color: #e7e7e7;
+} 
+.card{
+  background-color: gray;
+}
+
+    </style>
+  </head>
+
+  <body>
+    <h3>
+      <label>Search Reddit</label><br/>
+      <input id="query" type="text" /><br/>
+      <label> Sort By</label>
+      <input type="radio" id="relevance" name="sort" value="confidence"/>
+      <label for="relevance" id="hi">Relevance</label>
+      <input type="radio" id="latest" name="sort" value="new"/>
+      <label for="latest">Latest</label><br/>
+      <label>Limit </label><br/>
+      <input id="limit" type="text" /><br/>
+      <input id="ser" type="button" value="Find" onclick="fetchData()"/>
+    </h3>
+    <p id="locs"></p>
+
+    <script>
+      function fetchData() {
+        var data = $("#query").val();
+        var sortBy = $('input[name="sort"]:checked').val();
+        console.log(sortBy);
+        var limit = $("#limit").val();
+        console.log(limit);
+
+        output = "<div class='main'>";
+        output+="<div class='row'>";
+        $.getJSON(
+          `https://www.reddit.com/search.json?q=${data}&limit=${limit}&sort=${sortBy}`,
+          function (res) {
+            console.log(res.data);
+
+            $.each(res.data.children, function (i, item) {
+              output+=`
+              <div class="row">
+              <div class="col-lg-4">
+              <div class="container">
+              <div class="card" style="width:400px">
+              <img class="card-img-top" src=${item.data.thumbnail} alt="No Image" style="width:80%">
+              <div class="card-body">
+              <h4 class="card-title">${item.data.title}</h4>
+              <form id="u" method='get' action='${item.data.url}'> <button type='submit'>Read More</button></form>
+              <div class="badge badge-secondary">Subreddit: ${item.data.subreddit}<br>
+              <div class="badge badge-dark">Score: ${item.data.score}</div>
+              </div>
+              </div>
+              </div>
+              </div>`;
+              });
+              output+="</div>";
+  
+  
+          
+            $("#locs").html(output);
+          },
+        );
+      }
+    </script>
+  </body>
+</html>

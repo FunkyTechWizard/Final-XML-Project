@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <title>Step 3</title>
+    <style>
+      th{
+          color: #1e062f;
+          background-color: grey ;
+      }
+      td{
+          color: black;
+          background-color: gold;
+      }
+      table, th, td {
+    border: 1px solid white;
+    border-collapse: collapse;
+  }
+  body{
+    background-color: lightslategrey;
+  }
+  
+  a{
+   
+    color:yellow;
+  }
+  #ser{
+  background-color: gray; 
+  border: none;
+  color: gray;
+  padding: 4px 12px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  background-color: #e7e7e7;
+  margin-left: 7px;
+} 
+label{
+  font-size: 10px;
+  cursor: crosshair;
+  color: darkgray;
+}
+#hi{
+  width:300px;
+  height:50px;
+  margin-left: 7px;
+}
+span{
+  padding-left: 7px;
+  margin-top: 7px;
+}
+#query{
+  font-size: 15px;
+}
+
+
+  
+  </style>
+ 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  </head>
+
+  <body>
+    <h3>
+      <img id="hi" src="img.png">
+      <br>
+      <span><i class="glyphicon glyphicon-search"></i>
+      </span>
+     
+      <label>search subreddits by name</label><br/>
+      <label></label>
+      <input id="query" type="text"/><br/>
+      <input type="button" id="ser" value="Find" onclick="fetchData()"/>
+      </label>
+      
+    </h3>
+    <p id="locs"></p>
+
+    <script>
+      function fetchData() {
+        var data = $("#query").val();
+        var Api="https://www.reddit.com/search.json?q=" + data;
+        x="&limit=3&sort=top";
+        
+        output = "<table border = 1><th> S.No. </th><th> Author </th><th> Image </th><th> Score </th><th> Comments </th><th> Flair </th>";
+
+        $.getJSON(Api + "&" + x,function (Step3) {
+            fetch("https://api.pushshift.io/reddit/search/comment/?q=" +Step3.data.children[0].data.subreddit +"/&limit=3&sort=top",).then((response) => response.json()).then((x) => {
+          $.each(Step3.data.children, function (i, item) {
+                  output += "<tr>";
+                  output += "<th>" + (i + 1) + "</th>";
+                  output += "<th>" + item.data.author + "</th>";
+                  output += "<th><img src='" +item.data.thumbnail +"' alt='no Image'</th>";
+                  output += "<th>" + item.data.score + "</th>";
+                  output += "<th><ul>";
+                  for (let i = 0; i < 3; i++) {
+                    output += "<li>" + x.data[i].body + "</li>";
+                  }
+                  output += "<th>" + item.data.author_flair_type + "</th>";
+                  output += "</tr>";
+                });
+                output += "</table>";
+                $("#locs").html(output);
+              });
+          },
+        );
+      }
+    </script>
+  </body>
+</html>
+
